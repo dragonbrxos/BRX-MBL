@@ -7,6 +7,7 @@ O **BRX-MBL** é uma solução robusta para executar aplicativos Android (.apk) 
 - **Tradução de APIs**: Mapeia gráficos (EGL/GLES), áudio e entrada para bibliotecas nativas do Linux.
 - **Interface Gráfica (GUI)**: Aplicativo em Python (PyQt6) para gerenciar e lançar APKs com facilidade.
 - **Integração com o Sistema**: Suporte a clique duplo em arquivos `.apk` e atalho no menu de aplicativos.
+- **Instalação Local**: A biblioteca `bionic_translation` agora é compilada localmente para evitar erros de download externo.
 
 ## 🛠️ Instalação Passo a Passo
 
@@ -19,11 +20,23 @@ cd BRX-MBL
 ```
 
 ### 2. Executar o Instalador
-O instalador automatizado cuidará de todas as dependências do sistema e do AUR (como `bionic_translation` e `android_translation_layer`).
+O instalador automatizado cuidará de todas as dependências do sistema e do AUR.
 ```bash
 chmod +x scripts/install.sh
 ./scripts/install.sh
 ```
+
+## 🔄 Como Atualizar
+
+Se você já tem o repositório e quer apenas atualizar para a versão mais recente sem baixar tudo do zero:
+
+```bash
+cd BRX-MBL
+chmod +x scripts/update.sh
+./scripts/update.sh
+```
+
+O script de atualização irá puxar as novas alterações do GitHub e perguntar se você deseja rodar o instalador para aplicar as mudanças de sistema.
 
 ## 🖥️ Como Usar
 
@@ -37,9 +50,10 @@ Após a instalação, você tem três formas de rodar seus aplicativos APK:
    ```
 
 ## 📦 Arquitetura do Projeto
-- **`native_engine/`**: Contém o código-fonte do motor de tradução de baixo nível (ATL).
+- **`native_engine/`**: Contém o código-fonte do motor de tradução de baixo nível (ATL) e a `bionic_translation` integrada.
 - **`src/gui.py`**: Interface gráfica em Python que orquestra a execução.
 - **`scripts/install.sh`**: Script de automação para configuração do ambiente nativo.
+- **`scripts/update.sh`**: Script para atualizações incrementais.
 
 ## ⚠️ Observações Importantes
 - **Compatibilidade**: O projeto está em desenvolvimento ativo. Aplicativos que dependem fortemente de Google Play Services podem não funcionar perfeitamente.
