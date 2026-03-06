@@ -14,20 +14,15 @@ O **BRX-MBL** é uma solução robusta para executar aplicativos Android (.apk) 
 Para instalar pela primeira vez ou **atualizar removendo a versão antiga**, copie e cole o comando abaixo no seu terminal:
 
 ```bash
-# Comando de Instalação/Atualização Limpa (Remove a pasta antiga e instala a nova)
 rm -rf BRX-MBL && git clone https://github.com/dragonbrxos/BRX-MBL.git && cd BRX-MBL && chmod +x scripts/install.sh && ./scripts/install.sh
 ```
-
-Este comando garante que você sempre tenha a versão mais recente e limpa do projeto, sem conflitos com arquivos antigos.
 
 ## 🔄 Como Atualizar (Rápido)
 
 Se você já tem o repositório e quer apenas baixar as novidades sem remover a pasta:
 
 ```bash
-cd BRX-MBL
-chmod +x scripts/update.sh
-./scripts/update.sh
+cd BRX-MBL && chmod +x scripts/update.sh && ./scripts/update.sh
 ```
 
 ## 🖥️ Como Usar
