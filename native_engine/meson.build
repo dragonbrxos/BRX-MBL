@@ -9,13 +9,14 @@ add_project_dependencies(incdir_dep, language: 'c')
 cc = meson.get_compiler('c')
 dir_base = meson.current_source_dir()
 builddir_base = meson.current_build_dir()
-libart_dep = dependency('art-standalone')
-libdl_bio_dep = [
-	cc.find_library('dl_bio')
-]
-libc_bio_dep = [
-	cc.find_library('c_bio')
-]
+# Usar bibliotecas locais compiladas na fase anterior
+libdl_bio_dep = cc.find_library('dl_bio', dirs: meson.current_source_dir() / 'bionic_translation/builddir')
+libc_bio_dep = cc.find_library('c_bio', dirs: meson.current_source_dir() / 'bionic_translation/builddir')
+pthread_bio_dep = cc.find_library('pthread_bio', dirs: meson.current_source_dir() / 'bionic_translation/builddir')
+
+# Dependência do ART (será instalada via pacman no sistema)
+libart_dep = dependency('art-standalone', required: false)
+
 bootclasspath_dir = libart_dep.get_variable(pkgconfig: 'libdir') / 'java'
 
 bootclasspath = bootclasspath_dir / 'core-all_classes.jar' + ':' + bootclasspath_dir / 'core-junit_classes.jar' + ':' + bootclasspath_dir / 'junit-runner_classes.jar'
