@@ -31,6 +31,28 @@
 
 #include <elf.h>
 #include <link.h>
+
+#ifndef DT_RELR
+#define DT_RELR 36
+#endif
+#ifndef DT_RELRSZ
+#define DT_RELRSZ 35
+#endif
+#ifndef DT_RELRENT
+#define DT_RELRENT 37
+#endif
+
+#ifndef ElfW
+# if __ELF_NATIVE_CLASS == 64
+#  define ElfW(type)      Elf64_##type
+# else
+#  define ElfW(type)      Elf32_##type
+# endif
+#endif
+
+typedef uint64_t Elf64_Relr;
+typedef uint32_t Elf32_Relr;
+
 #include <stdbool.h>
 #include <sys/types.h>
 #include <unistd.h>

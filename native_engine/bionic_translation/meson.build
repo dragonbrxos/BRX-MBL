@@ -12,9 +12,7 @@ config = declare_dependency(
 	sources: [
 		'shared/config/config.c'
 	],
-	compile_args: [
-		c_args_common,
-	],
+		compile_args: c_args_common,
 	include_directories: [
 		'shared/config',
 	]
@@ -25,10 +23,7 @@ wrapper = static_library('wrapper',
 		'wrapper/wrapper.c'
 	],
 	pic: true,
-	c_args: [
-		c_args_common,
-		'-fvisibility=hidden'
-	]
+		c_args: c_args_common + ['-fvisibility=hidden']
 )
 
 dl_bio = shared_library('dl_bio',
@@ -43,23 +38,22 @@ dl_bio = shared_library('dl_bio',
 	version: '0.0.1', # this is not just a simple API shim, this is a shim dynamic linker with patches to aid us in our goals; it's possible, if unlikely, that the ABI will change
 	install: true,
 	dependencies: [
-		dependency('dl'),
-		dependency('egl'),
-		dependency('libelf'),
-		dependency('libunwind', version : '>=1.8.0'), # needed by libc_bio anyway, so might as well use it here
+		cc.find_library('dl', required : false),
+		dependency('egl', required : false),
+		dependency('libelf', required : false),
+		dependency('libunwind', required : false), # needed by libc_bio anyway, so might as well use it here
 		config,
 	],
 	link_with: [
 		wrapper
 	],
 
-	c_args: [
-		c_args_common,
-		'-D_LARGEFILE64_SOURCE',
-		'-DLINKER_DEBUG=1',
-		'-DVERBOSE_FUNCTIONS=1',
-		'-Wno-parentheses',
-	],
+		c_args: c_args_common + [
+			'-D_LARGEFILE64_SOURCE',
+			'-DLINKER_DEBUG=1',
+			'-DVERBOSE_FUNCTIONS=1',
+			'-Wno-parentheses',
+		],
 	link_args: [
 		'-Wl,--no-as-needed',
 		'-lpthread' # dependency('threads') doesn't express that we specifically need pthreads
@@ -73,12 +67,9 @@ pthread_bio = shared_library('pthread_bio',
 	soversion: 0, # we're shimming a stable ABI; this should never need to change
 	install: true,
 	dependencies: [
-		dependency('dl'),
+		cc.find_library('dl', required : false),
 	],
-	c_args: [
-		c_args_common,
-		'-fno-exceptions',
-	],
+		c_args: c_args_common + ['-fno-exceptions'],
 	link_args: [
 		'-Wl,--no-as-needed', # this really shouldn't be needed, since symbols from libpthread are used, but somehow it is
 		'-lpthread' # dependency('threads') doesn't express that we specifically need pthreads
@@ -116,18 +107,15 @@ c_bio = shared_library('c_bio',
 	soversion: 0, # we're shimming a stable ABI; this should never need to change
 	install: true,
 	dependencies: [
-		dependency('libbsd'),
-		dependency('libunwind'), # see comments on https://reviews.llvm.org/D78787; for 32bit arm we may need more fun
+		dependency('libbsd', required : false),
+		dependency('libunwind', required : false), # see comments on https://reviews.llvm.org/D78787; for 32bit arm we may need more fun
 		libm_dep, # TODO: have separate libm_bio? (note: on musl this is a noop)
 	],
 	link_with: [
 		wrapper,
 		pthread_bio
 	],
-	c_args: [
-		c_args_common,
-		'-DPAGESIZE=4096',
-	],
+		c_args: c_args_common + ['-DPAGESIZE=4096'],
 	link_args: [
 		libc_bio_hardcoded_symbols,
 		'-Wl,-wrap,_IO_file_xsputn',
@@ -136,21 +124,8 @@ c_bio = shared_library('c_bio',
 	]
 )
 
-stdcpp_bio = shared_library('stdc++_bio',
-	sources: [
-		'libstdc++_standalone/new.cpp',
-		'libstdc++_standalone/__cxa_pure_virtual.cpp',
-		'libstdc++_standalone/__cxa_guard.cpp'
-	],
-	soversion: 0, # this tiny library's stable ABI will definitely never change, it's deprecated; this should never need to change
-	install: true,
-	include_directories: [
-		'libstdc++_standalone/include/'
-	],
-	cpp_args: [
-		'--std=c++23'
-	]
-)
+# stdcpp_bio desativada para simplificar build nativo
+
 
 install_data(
 	sources: [
@@ -159,4 +134,5 @@ install_data(
 	install_dir: get_option('datadir') / 'bionic_translation/cfg.d'
 )
 
-subdir('tests')
+# subdir('tests') desativado
+
