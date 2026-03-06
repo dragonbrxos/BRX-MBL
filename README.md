@@ -9,34 +9,26 @@ O **BRX-MBL** é uma solução robusta para executar aplicativos Android (.apk) 
 - **Integração com o Sistema**: Suporte a clique duplo em arquivos `.apk` e atalho no menu de aplicativos.
 - **Instalação Local**: A biblioteca `bionic_translation` agora é compilada localmente para evitar erros de download externo.
 
-## 🛠️ Instalação Passo a Passo
+## 🛠️ Instalação e Atualização Limpa
 
-Siga os comandos abaixo no seu terminal para clonar e instalar o BRX-MBL no seu Manjaro ou Arch Linux:
+Para instalar pela primeira vez ou **atualizar removendo a versão antiga**, copie e cole o comando abaixo no seu terminal:
 
-### 1. Clonar o Repositório
 ```bash
-git clone https://github.com/dragonbrxos/BRX-MBL.git
-cd BRX-MBL
+# Comando de Instalação/Atualização Limpa (Remove a pasta antiga e instala a nova)
+rm -rf BRX-MBL && git clone https://github.com/dragonbrxos/BRX-MBL.git && cd BRX-MBL && chmod +x scripts/install.sh && ./scripts/install.sh
 ```
 
-### 2. Executar o Instalador
-O instalador automatizado cuidará de todas as dependências do sistema e do AUR.
-```bash
-chmod +x scripts/install.sh
-./scripts/install.sh
-```
+Este comando garante que você sempre tenha a versão mais recente e limpa do projeto, sem conflitos com arquivos antigos.
 
-## 🔄 Como Atualizar
+## 🔄 Como Atualizar (Rápido)
 
-Se você já tem o repositório e quer apenas atualizar para a versão mais recente sem baixar tudo do zero:
+Se você já tem o repositório e quer apenas baixar as novidades sem remover a pasta:
 
 ```bash
 cd BRX-MBL
 chmod +x scripts/update.sh
 ./scripts/update.sh
 ```
-
-O script de atualização irá puxar as novas alterações do GitHub e perguntar se você deseja rodar o instalador para aplicar as mudanças de sistema.
 
 ## 🖥️ Como Usar
 
