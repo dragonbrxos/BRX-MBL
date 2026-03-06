@@ -13,14 +13,28 @@ NC='\033[0m'
 
 echo -e "${BLUE}--- Instalador BRX-MBL: APK Native Runner ---${NC}"
 
-# 1. Instalar dependências básicas do sistema
-echo -e "${GREEN}Instalando dependências do sistema...${NC}"
-sudo pacman -S --noconfirm python-pip python-pyqt6 base-devel git jre-openjdk-headless alsa-lib cairo ffmpeg gdk-pixbuf2 glib2 glibc graphene gtk4 harfbuzz meson ninja
+# 1. Verificar e instalar dependências básicas do sistema
+echo -e "${GREEN}Verificando dependências do sistema...${NC}"
 
-# 2. Compilar e instalar a bionic_translation localmente (Evita erro 403 do GitLab)
+# Lista de dependências comuns
+DEPS="python-pip python-pyqt6 base-devel git alsa-lib cairo ffmpeg gdk-pixbuf2 glib2 glibc graphene gtk4 harfbuzz meson ninja"
+
+# Lógica inteligente para o Java (evita conflito jre-openjdk-headless vs jdk-openjdk)
+if pacman -Qs "jdk-openjdk" > /dev/null || pacman -Qs "jre-openjdk" > /dev/null; then
+    echo -e "${BLUE}Java já detectado no sistema. Pulando instalação do JRE para evitar conflitos.${NC}"
+else
+    echo -e "${GREEN}Java não detectado. Adicionando jre-openjdk-headless à lista de instalação.${NC}"
+    DEPS="$DEPS jre-openjdk-headless"
+fi
+
+# Instalar pacotes
+sudo pacman -S --needed --noconfirm $DEPS
+
+# 2. Compilar e instalar a bionic_translation localmente
 echo -e "${GREEN}Compilando e instalando bionic_translation localmente...${NC}"
 INSTALL_DIR=$(pwd)
 cd "$INSTALL_DIR/native_engine/bionic_translation"
+rm -rf builddir
 meson setup builddir --prefix=/usr
 meson compile -C builddir
 sudo meson install -C builddir
